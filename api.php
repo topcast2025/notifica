@@ -9,8 +9,58 @@ require_once __DIR__ . '/logs.php';
 function whatsapp_test_connection($token) {
     $curl = curl_init();
 
+    // Primeiro, vamos testar com um endpoint mais simples para verificar a autenticação
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://centralwhats.pro/api/bb24c7c6-ed6f-463c-9636-3fdff96f6bf1/contact/send-message',
+        CURLOPT_URL => 'https://centralwhats.pro/api/bb24c7c6-ed6f-463c-9636-3fdff96f6bf1/status?token=' . urlencode($token),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $token
+        ],
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false
+    ));
+
+    $response = curl_exec($curl);
+    $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    $error = curl_error($curl);
+    curl_close($curl);
+    
+    logActivity("Teste de conexão Central Whats - HTTP Code: " . $httpCode);
+    logActivity("Teste de conexão Central Whats - Response: " . $response);
+    
+    if ($error) {
+        logActivity("Erro na conexão WhatsApp: " . $error);
+        return [
+            'success' => false,
+            'message' => 'Erro ao conectar com a API: ' . $error
+        ];
+    }
+    
+    // Se o endpoint de status não funcionar, vamos tentar o endpoint de envio com dados de teste
+    if ($httpCode != 200) {
+        return whatsapp_test_send_message($token);
+    }
+    
+    $responseData = json_decode($response, true);
+    
+    return [
+        'success' => true,
+        'message' => 'Conexão estabelecida com sucesso!'
+    ];
+}
+
+function whatsapp_test_send_message($token) {
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://centralwhats.pro/api/bb24c7c6-ed6f-463c-9636-3fdff96f6bf1/contact/send-message?token=' . urlencode($token),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -35,6 +85,9 @@ function whatsapp_test_connection($token) {
     $error = curl_error($curl);
     curl_close($curl);
     
+    logActivity("Teste de envio Central Whats - HTTP Code: " . $httpCode);
+    logActivity("Teste de envio Central Whats - Response: " . $response);
+    
     if ($error) {
         logActivity("Erro na conexão WhatsApp: " . $error);
         return [
@@ -45,17 +98,21 @@ function whatsapp_test_connection($token) {
     
     $responseData = json_decode($response, true);
     
-    if ($httpCode == 200) {
+    if ($httpCode == 200 || $httpCode == 201) {
         return [
             'success' => true,
             'message' => 'Conexão estabelecida com sucesso!'
         ];
     } else {
         $errorMessage = isset($responseData['message']) ? $responseData['message'] : 'Erro desconhecido';
+        if (isset($responseData['error'])) {
+            $errorMessage = $responseData['error'];
+        }
+        
         logActivity("Erro na API WhatsApp: " . $errorMessage . " (HTTP: " . $httpCode . ")");
         return [
             'success' => false,
-            'message' => 'Erro ao conectar com a API: ' . $errorMessage
+            'message' => 'Erro ao conectar com a API (HTTP ' . $httpCode . '): ' . $errorMessage
         ];
     }
 }
@@ -85,8 +142,11 @@ function whatsapp_send_message($to, $message, $attachment = null) {
         
         logActivity("Dados do envio: " . print_r($postData, true));
         
+        // URL com token como parâmetro e também no header
+        $url = 'https://centralwhats.pro/api/bb24c7c6-ed6f-463c-9636-3fdff96f6bf1/contact/send-message?token=' . urlencode($moduleParams['token']);
+        
         $curlOptions = array(
-            CURLOPT_URL => 'https://centralwhats.pro/api/bb24c7c6-ed6f-463c-9636-3fdff96f6bf1/contact/send-message',
+            CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -113,7 +173,7 @@ function whatsapp_send_message($to, $message, $attachment = null) {
             } else {
                 if (file_exists($attachment)) {
                     // Para arquivos locais, usar multipart/form-data
-                    $curlOptions[CURLOPT_URL] = 'https://centralwhats.pro/api/bb24c7c6-ed6f-463c-9636-3fdff96f6bf1/contact/send-media';
+                    $curlOptions[CURLOPT_URL] = 'https://centralwhats.pro/api/bb24c7c6-ed6f-463c-9636-3fdff96f6bf1/contact/send-media?token=' . urlencode($moduleParams['token']);
                     $curlOptions[CURLOPT_POSTFIELDS] = [
                         'number' => preg_replace('/[^0-9]/', '', $to),
                         'message' => $message,
@@ -157,7 +217,7 @@ function whatsapp_send_message($to, $message, $attachment = null) {
             return ['success' => false, 'message' => 'Erro ao enviar mensagem: ' . $error];
         }
         
-        $success = $httpCode == 200;
+        $success = ($httpCode == 200 || $httpCode == 201);
         
         whatsapp_log_message([
             'to' => $to,
@@ -171,7 +231,7 @@ function whatsapp_send_message($to, $message, $attachment = null) {
         
         return [
             'success' => $success,
-            'message' => $success ? 'Mensagem enviada com sucesso!' : 'Erro ao enviar mensagem.'
+            'message' => $success ? 'Mensagem enviada com sucesso!' : 'Erro ao enviar mensagem (HTTP ' . $httpCode . ')'
         ];
     } catch (Exception $e) {
         logActivity("Exceção ao enviar mensagem WhatsApp: " . $e->getMessage());
