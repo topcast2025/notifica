@@ -452,10 +452,185 @@
             color: var(--text-light);
         }
 
+        /* Installation Tutorial */
+        .installation {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .tutorial-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .tutorial-intro {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .tutorial-intro h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .tutorial-intro p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .requirements {
+            background: #f8fafc;
+            border-left: 4px solid #25D366;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+        }
+
+        .requirements h4 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .requirements ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .requirements li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .requirements li::before {
+            content: '✓';
+            color: #25D366;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .installation-steps {
+            counter-reset: step-counter;
+        }
+
+        .installation-step {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .installation-step:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .installation-step::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            top: -15px;
+            left: 2rem;
+            background: var(--gradient-primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .step-title-main {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .step-content {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .step-content ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .step-content li {
+            margin: 0.5rem 0;
+        }
+
+        .code-block {
+            background: #1a1a1a;
+            color: #e5e7eb;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background: rgba(37, 211, 102, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .warning {
+            background: #fef3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .warning i {
+            color: #f39c12;
+            margin-top: 2px;
+        }
+
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .success i {
+            color: #25D366;
+            margin-top: 2px;
+        }
+
         /* Templates Section */
         .templates {
             padding: 80px 0;
-            background: white;
+            background: var(--bg-light);
         }
 
         .templates-showcase {
@@ -648,6 +823,14 @@
             .container {
                 padding: 0 15px;
             }
+
+            .tutorial-container {
+                padding: 0 15px;
+            }
+
+            .installation-step {
+                padding: 1.5rem;
+            }
         }
 
         /* Animations */
@@ -696,6 +879,7 @@
                 <ul class="nav-links">
                     <li><a href="#features">Recursos</a></li>
                     <li><a href="#how-it-works">Como Funciona</a></li>
+                    <li><a href="#installation">Instalação</a></li>
                     <li><a href="#templates">Templates</a></li>
                     <li><a href="https://centralwhats.pro/#pricing">Preços</a></li>
                     <li><a href="https://centralwhats.pro/auth/register/vendor" class="btn btn-primary">Cadastre-se</a></li>
@@ -718,7 +902,6 @@
                         <a href="https://topcastbrasil.com.br/botwhmcs.zip" class="btn btn-primary">
                             <i class="fas fa-download"></i>
                             Download Gratuito
-                        
                         </a>
                     </div>
                 </div>
@@ -830,6 +1013,202 @@
                     <div class="step-number">3</div>
                     <h3 class="step-title">Personalize Templates</h3>
                     <p class="step-description">Customize as mensagens automáticas de acordo com sua marca e comece a enviar notificações.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Tutorial -->
+    <section class="installation" id="installation">
+        <div class="container">
+            <div class="tutorial-container">
+                <div class="section-header" data-aos="fade-up">
+                    <h2 class="section-title">Tutorial de Instalação</h2>
+                    <p class="section-subtitle">Guia completo para instalar e configurar o módulo WhatsApp no seu WHMCS</p>
+                </div>
+
+                <div class="tutorial-intro" data-aos="fade-up">
+                    <h3><i class="fas fa-rocket"></i> Introdução</h3>
+                    <p>Este guia fornece instruções detalhadas para a instalação e configuração do módulo de notificação via WhatsApp para WHMCS. O módulo permite o envio automático de mensagens de faturas, lembretes de vencimento e avisos gerais para clientes, utilizando a API do WhatsApp da Central Whats.</p>
+                </div>
+
+                <div class="requirements" data-aos="fade-up">
+                    <h4><i class="fas fa-list-check"></i> Requisitos</h4>
+                    <p>Antes de iniciar a instalação, certifique-se de atender aos seguintes requisitos:</p>
+                    <ul>
+                        <li>WHMCS 8.0 ou superior</li>
+                        <li>API pública de WhatsApp configurada</li>
+                        <li>Acesso ao FTP do servidor</li>
+                        <li>Permissões adequadas no WHMCS para instalar módulos</li>
+                        <li>Conta ativa na Central Whats</li>
+                    </ul>
+                </div>
+
+                <div class="installation-steps">
+                    <div class="installation-step" data-aos="fade-up">
+                        <h3 class="step-title-main">Download e Upload dos Arquivos</h3>
+                        <div class="step-content">
+                            <p>Primeiro, você precisa fazer o download e upload dos arquivos do módulo:</p>
+                            
+                            <div class="success">
+                                <i class="fas fa-download"></i>
+                                <div>
+                                    <strong>Download:</strong> Baixe o arquivo ZIP do módulo usando o botão no topo da página.
+                                </div>
+                            </div>
+
+                            <p>Crie a estrutura de pastas no seu servidor:</p>
+                            <div class="code-block">
+/whmcs/modules/addons/whatsapp_notification/</div>
+
+                            <p>Copie todos os arquivos extraídos para esta pasta:</p>
+                            <ul>
+                                <li><span class="highlight">api.php</span> - Funções de comunicação com a API</li>
+                                <li><span class="highlight">hooks.php</span> - Hooks do WHMCS para eventos automáticos</li>
+                                <li><span class="highlight">logs.php</span> - Sistema de logs e relatórios</li>
+                                <li><span class="highlight">templates.php</span> - Gerenciamento de templates</li>
+                                <li><span class="highlight">utils.php</span> - Funções utilitárias</li>
+                                <li><span class="highlight">whatsapp_notification.php</span> - Arquivo principal do módulo</li>
+                                <li><span class="highlight">whmcs.json</span> - Metadados do módulo</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="installation-step" data-aos="fade-up">
+                        <h3 class="step-title-main">Ativação do Módulo no WHMCS</h3>
+                        <div class="step-content">
+                            <p>Agora você precisa ativar o módulo no painel administrativo do WHMCS:</p>
+                            <ol>
+                                <li>Acesse o painel admin do WHMCS</li>
+                                <li>Vá em <span class="highlight">Configurações > Módulos Addon</span></li>
+                                <li>Localize o módulo <span class="highlight">"Notificação WhatsApp"</span></li>
+                                <li>Clique em <span class="highlight">"Ativar"</span></li>
+                            </ol>
+
+                            <div class="warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div>
+                                    <strong>Importante:</strong> Certifique-se de que todos os arquivos foram enviados corretamente antes de tentar ativar o módulo.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="installation-step" data-aos="fade-up">
+                        <h3 class="step-title-main">Configuração da Central Whats</h3>
+                        <div class="step-content">
+                            <p>Para usar o módulo, você precisa de uma conta na Central Whats:</p>
+                            <ol>
+                                <li>Acesse <a href="https://centralwhats.pro" target="_blank" class="highlight">centralwhats.pro</a></li>
+                                <li>Crie uma conta ou faça login</li>
+                                <li>No painel, vá em <span class="highlight">"Configurações" > "API"</span></li>
+                                <li>Copie o <span class="highlight">token de autenticação</span></li>
+                                <li>Conecte seu WhatsApp seguindo as instruções do painel</li>
+                            </ol>
+
+                            <div class="success">
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>Dica:</strong> Mantenha o token em local seguro, pois ele será necessário para configurar o módulo.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="installation-step" data-aos="fade-up">
+                        <h3 class="step-title-main">Configuração do Módulo</h3>
+                        <div class="step-content">
+                            <p>Agora configure o módulo no WHMCS:</p>
+                            <ol>
+                                <li>No painel admin, vá em <span class="highlight">Addons > Notificação WhatsApp</span></li>
+                                <li>Na aba <span class="highlight">"Configurações"</span>, insira o token da Central Whats</li>
+                                <li>Configure as demais opções conforme necessário:</li>
+                            </ol>
+
+                            <ul>
+                                <li><strong>Token da API:</strong> Cole o token obtido da Central Whats</li>
+                                <li><strong>Formato da Data:</strong> Mantenha o padrão ou personalize</li>
+                                <li><strong>Enviar PDF da Fatura:</strong> Ative se desejar enviar PDFs automaticamente</li>
+                                <li><strong>Temporariamente Desativado:</strong> Use para pausar o envio de mensagens</li>
+                            </ul>
+
+                            <p>Clique em <span class="highlight">"Testar Conexão"</span> para verificar se tudo está funcionando.</p>
+                        </div>
+                    </div>
+
+                    <div class="installation-step" data-aos="fade-up">
+                        <h3 class="step-title-main">Personalização de Templates</h3>
+                        <div class="step-content">
+                            <p>O módulo já vem com templates predefinidos, mas você pode personalizá-los:</p>
+                            
+                            <p><strong>Templates de Cliente:</strong></p>
+                            <ul>
+                                <li>Notificação de Fatura</li>
+                                <li>Confirmação de Pagamento</li>
+                                <li>Lembrete de Vencimento</li>
+                                <li>Serviço Ativado/Suspenso</li>
+                                <li>Boas-vindas</li>
+                            </ul>
+
+                            <p><strong>Templates de Admin:</strong></p>
+                            <ul>
+                                <li>Novo Pedido</li>
+                                <li>Novo Ticket</li>
+                                <li>Pagamento Recebido</li>
+                            </ul>
+
+                            <div class="warning">
+                                <i class="fas fa-info-circle"></i>
+                                <div>
+                                    <strong>Variáveis Disponíveis:</strong> Use variáveis como {firstname}, {amount}, {invoiceid} para personalizar as mensagens automaticamente.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="installation-step" data-aos="fade-up">
+                        <h3 class="step-title-main">Configurações Importantes</h3>
+                        <div class="step-content">
+                            <p>Para o funcionamento correto do módulo, observe estas configurações:</p>
+                            
+                            <div class="success">
+                                <i class="fas fa-phone"></i>
+                                <div>
+                                    <strong>Formato do Telefone:</strong> O número de telefone dos clientes deve estar no formato internacional (Ex: 5511999999999)
+                                </div>
+                            </div>
+
+                            <div class="success">
+                                <i class="fab fa-whatsapp"></i>
+                                <div>
+                                    <strong>WhatsApp Conectado:</strong> Certifique-se de que o WhatsApp esteja conectado no painel da Central Whats
+                                </div>
+                            </div>
+
+                            <div class="success">
+                                <i class="fas fa-file-pdf"></i>
+                                <div>
+                                    <strong>PDFs de Fatura:</strong> Para enviar PDFs, ative a opção "Enviar PDF da Fatura" nas configurações
+                                </div>
+                            </div>
+
+                            <p><strong>Recursos Inclusos:</strong></p>
+                            <ul>
+                                <li>Templates predefinidos para todas as notificações</li>
+                                <li>Interface para envio manual de mensagens</li>
+                                <li>Suporte a envio de PDF de faturas</li>
+                                <li>Notificações para clientes e admins</li>
+                                <li>Sistema completo de logs e relatórios</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success" data-aos="fade-up" style="margin-top: 2rem;">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Instalação Concluída!</strong> Seu módulo WhatsApp está pronto para uso. Teste enviando uma mensagem manual para verificar se tudo está funcionando corretamente.
+                    </div>
                 </div>
             </div>
         </div>
