@@ -1,0 +1,23 @@
+{
+  "name": "centralwhats-landing",
+  "version": "1.0.0",
+  "description": "Página de apresentação do Central Whats - Módulo WHMCS",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve . -p 3000",
+    "build": "echo 'Site estático pronto para deploy'",
+    "preview": "npx serve . -p 3000"
+  },
+  "keywords": [
+    "whatsapp",
+    "whmcs",
+    "centralwhats",
+    "landing-page",
+    "notifications"
+  ],
+  "author": "Central Whats",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
