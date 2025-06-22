@@ -11,8 +11,8 @@ function whatsapp_test_connection($token) {
 
     // Teste simples com dados mínimos obrigatórios
     $testData = [
-        'number' => '5511999999999', // Número de teste
-        'text' => 'Teste de conexão - Central Whats'
+        'phone_number' => '5511999999999', // Campo correto conforme erro
+        'message' => 'Teste de conexão - Central Whats' // Testando também 'message' em vez de 'text'
     ];
 
     curl_setopt_array($curl, array(
@@ -66,7 +66,19 @@ function whatsapp_test_connection($token) {
         } elseif (isset($responseData['error'])) {
             $errorMessage = $responseData['error'];
         } elseif (isset($responseData['errors'])) {
-            $errorMessage = is_array($responseData['errors']) ? implode(', ', $responseData['errors']) : $responseData['errors'];
+            if (is_array($responseData['errors'])) {
+                $errors = [];
+                foreach ($responseData['errors'] as $field => $fieldErrors) {
+                    if (is_array($fieldErrors)) {
+                        $errors[] = $field . ': ' . implode(', ', $fieldErrors);
+                    } else {
+                        $errors[] = $field . ': ' . $fieldErrors;
+                    }
+                }
+                $errorMessage = implode(' | ', $errors);
+            } else {
+                $errorMessage = $responseData['errors'];
+            }
         }
         
         logActivity("Erro na API WhatsApp: " . $errorMessage . " (HTTP: " . $httpCode . ")");
@@ -103,9 +115,10 @@ function whatsapp_send_message($to, $message, $attachment = null) {
             $cleanNumber = '55' . $cleanNumber; // Adiciona código do Brasil se necessário
         }
         
+        // Usar os campos corretos conforme a API
         $postData = [
-            'number' => $cleanNumber,
-            'text' => $message
+            'phone_number' => $cleanNumber, // Campo correto
+            'message' => $message // Testando 'message' em vez de 'text'
         ];
         
         logActivity("Dados do envio: " . print_r($postData, true));
@@ -138,8 +151,8 @@ function whatsapp_send_message($to, $message, $attachment = null) {
             if (filter_var($attachment, FILTER_VALIDATE_URL)) {
                 // Para URLs de mídia
                 $postData = [
-                    'number' => $cleanNumber,
-                    'text' => $message,
+                    'phone_number' => $cleanNumber,
+                    'message' => $message,
                     'media_url' => $attachment
                 ];
                 $curlOptions[CURLOPT_POSTFIELDS] = json_encode($postData);
@@ -149,8 +162,8 @@ function whatsapp_send_message($to, $message, $attachment = null) {
                     // Para arquivos locais, usar multipart/form-data
                     $curlOptions[CURLOPT_URL] = 'https://centralwhats.pro/api/bb24c7c6-ed6f-463c-9636-3fdff96f6bf1/contact/send-media?token=' . urlencode($moduleParams['token']);
                     $curlOptions[CURLOPT_POSTFIELDS] = [
-                        'number' => $cleanNumber,
-                        'text' => $message,
+                        'phone_number' => $cleanNumber,
+                        'message' => $message,
                         'media' => new CURLFile($attachment)
                     ];
                     $curlOptions[CURLOPT_HTTPHEADER] = [
@@ -203,7 +216,19 @@ function whatsapp_send_message($to, $message, $attachment = null) {
             } elseif (isset($responseData['error'])) {
                 $errorMessage = $responseData['error'];
             } elseif (isset($responseData['errors'])) {
-                $errorMessage = is_array($responseData['errors']) ? implode(', ', $responseData['errors']) : $responseData['errors'];
+                if (is_array($responseData['errors'])) {
+                    $errors = [];
+                    foreach ($responseData['errors'] as $field => $fieldErrors) {
+                        if (is_array($fieldErrors)) {
+                            $errors[] = $field . ': ' . implode(', ', $fieldErrors);
+                        } else {
+                            $errors[] = $field . ': ' . $fieldErrors;
+                        }
+                    }
+                    $errorMessage = implode(' | ', $errors);
+                } else {
+                    $errorMessage = $responseData['errors'];
+                }
             } else {
                 $errorMessage = 'Erro desconhecido';
             }
