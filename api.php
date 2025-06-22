@@ -11,8 +11,8 @@ function whatsapp_test_connection($token) {
 
     // Teste simples com dados mínimos obrigatórios
     $testData = [
-        'phone_number' => '5511999999999', // Campo correto conforme erro
-        'message' => 'Teste de conexão - Central Whats' // Testando também 'message' em vez de 'text'
+        'phone_number' => '5511999999999', // Campo correto conforme erro anterior
+        'message_body' => 'Teste de conexão - Central Whats' // Campo correto conforme erro atual
     ];
 
     curl_setopt_array($curl, array(
@@ -118,7 +118,7 @@ function whatsapp_send_message($to, $message, $attachment = null) {
         // Usar os campos corretos conforme a API
         $postData = [
             'phone_number' => $cleanNumber, // Campo correto
-            'message' => $message // Testando 'message' em vez de 'text'
+            'message_body' => $message // Campo correto conforme erro
         ];
         
         logActivity("Dados do envio: " . print_r($postData, true));
@@ -152,7 +152,7 @@ function whatsapp_send_message($to, $message, $attachment = null) {
                 // Para URLs de mídia
                 $postData = [
                     'phone_number' => $cleanNumber,
-                    'message' => $message,
+                    'message_body' => $message,
                     'media_url' => $attachment
                 ];
                 $curlOptions[CURLOPT_POSTFIELDS] = json_encode($postData);
@@ -163,7 +163,7 @@ function whatsapp_send_message($to, $message, $attachment = null) {
                     $curlOptions[CURLOPT_URL] = 'https://centralwhats.pro/api/bb24c7c6-ed6f-463c-9636-3fdff96f6bf1/contact/send-media?token=' . urlencode($moduleParams['token']);
                     $curlOptions[CURLOPT_POSTFIELDS] = [
                         'phone_number' => $cleanNumber,
-                        'message' => $message,
+                        'message_body' => $message,
                         'media' => new CURLFile($attachment)
                     ];
                     $curlOptions[CURLOPT_HTTPHEADER] = [
