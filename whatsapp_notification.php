@@ -11,21 +11,15 @@ require_once __DIR__ . '/logs.php';
 function whatsapp_notification_config() {
     return [
         'name' => 'Notificação WhatsApp',
-        'description' => 'Módulo para envio de notificações via WhatsApp usando Botconect',
+        'description' => 'Módulo para envio de notificações via WhatsApp usando Central Whats',
         'version' => '10.0',
         'author' => 'BOTWHMCS',
         'fields' => [
-            'appkey' => [
-                'FriendlyName' => 'App Key',
+            'token' => [
+                'FriendlyName' => 'Token da API',
                 'Type' => 'text',
                 'Size' => '60',
-                'Description' => 'Chave do aplicativo Botconect'
-            ],
-            'authkey' => [
-                'FriendlyName' => 'Auth Key',
-                'Type' => 'text',
-                'Size' => '60',
-                'Description' => 'Chave de autenticação Botconect'
+                'Description' => 'Token de autenticação da Central Whats'
             ],
             'mobile_field' => [
                 'FriendlyName' => 'Campo Número Celular',
@@ -98,9 +92,8 @@ function whatsapp_notification_output($vars) {
     $action = isset($_GET['action']) ? $_GET['action'] : '';
     
     if ($action == 'test_connection') {
-        $appkey = $_POST['appkey'];
-        $authkey = $_POST['authkey'];
-        $result = whatsapp_test_connection($appkey, $authkey);
+        $token = $_POST['token'];
+        $result = whatsapp_test_connection($token);
         header('Content-Type: application/json');
         echo json_encode($result);
         exit;
@@ -442,11 +435,10 @@ function whatsapp_notification_output($vars) {
         document.getElementById("emoji-picker").appendChild(picker);
 
         function testWhatsAppConnection() {
-            var appkey = document.querySelector("input[name=\'appkey\']").value;
-            var authkey = document.querySelector("input[name=\'authkey\']").value;
+            var token = document.querySelector("input[name=\'token\']").value;
             
-            if (!appkey || !authkey) {
-                alert("Por favor, preencha as chaves de API primeiro!");
+            if (!token) {
+                alert("Por favor, preencha o token da API primeiro!");
                 return;
             }
             
@@ -458,7 +450,7 @@ function whatsapp_notification_output($vars) {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
-                body: "appkey=" + encodeURIComponent(appkey) + "&authkey=" + encodeURIComponent(authkey)
+                body: "token=" + encodeURIComponent(token)
             })
             .then(response => response.json())
             .then(data => {
@@ -593,17 +585,17 @@ function whatsapp_notification_settings($vars) {
     $output .= '<div class="alert alert-info">
         <h4><i class="fas fa-info-circle"></i> Tutorial de Configuração</h4>
         <ol>
-            <li>Acesse o site <a href="https://botconect.site" target="_blank">botconect.site</a></li>
+            <li>Acesse o site <a href="https://centralwhats.pro" target="_blank">centralwhats.pro</a></li>
             <li>Crie uma conta ou faça login</li>
             <li>No painel, vá em "Configurações" > "API"</li>
-            <li>Copie as chaves "App Key" e "Auth Key"</li>
-            <li>Cole as chaves nos campos correspondentes abaixo</li>
+            <li>Copie o token de autenticação</li>
+            <li>Cole o token no campo correspondente abaixo</li>
             <li>Clique em "Salvar Configurações"</li>
             <li>Use o botão "Testar Conexão" para verificar se está tudo funcionando</li>
         </ol>
         <p><strong>Observações importantes:</strong></p>
         <ul>
-            <li>Certifique-se de que o WhatsApp esteja conectado no painel do Botconect</li>
+            <li>Certifique-se de que o WhatsApp esteja conectado no painel da Central Whats</li>
             <li>O número de telefone dos clientes deve estar no formato internacional (Ex: 5511999999999)</li>
             <li>Para enviar PDFs de faturas, ative a opção "Enviar PDF da Fatura"</li>
         </ul>
@@ -612,15 +604,10 @@ function whatsapp_notification_settings($vars) {
     $output .= '<h3>Configurações do WhatsApp</h3>';
     $output .= '<form method="post" action="addonmodules.php?module=whatsapp_notification&action=save_settings" class="form-horizontal">
         <div class="form-group">
-            <label class="col-sm-3 control-label">App Key</label>
+            <label class="col-sm-3 control-label">Token da API</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" name="appkey" value="' . htmlspecialchars($vars['appkey']) . '">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Auth Key</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" name="authkey" value="' . htmlspecialchars($vars['authkey']) . '">
+                <input type="text" class="form-control" name="token" value="' . htmlspecialchars($vars['token']) . '">
+                <small class="help-block">Token de autenticação da Central Whats</small>
             </div>
         </div>
         <div class="form-group">
@@ -883,7 +870,7 @@ function whatsapp_notification_support($vars) {
         <div class="panel-body">
             <h4>Documentação</h4>
             <p>Para mais informações sobre como usar este módulo, consulte nossa documentação completa.</p>
-            <a href="#" class="btn btn-whatsapp">
+            <a href="https://centralwhats.pro/docs" target="_blank" class="btn btn-whatsapp">
                 <i class="fas fa-book"></i> Ver Documentação
             </a>
             
@@ -891,7 +878,7 @@ function whatsapp_notification_support($vars) {
             
             <h4>Contato</h4>
             <p>Precisa de ajuda? Entre em contato com nossa equipe de suporte.</p>
-            <a href="#" class="btn btn-whatsapp">
+            <a href="https://centralwhats.pro/suporte" target="_blank" class="btn btn-whatsapp">
                 <i class="fas fa-headset"></i> Contatar Suporte
             </a>
         </div>
@@ -899,3 +886,4 @@ function whatsapp_notification_support($vars) {
     $output .= '</div>';
     return $output;
 }
+?>

@@ -4,18 +4,18 @@
     "name": "whatsapp_notification",
     "license": "proprietary",
     "category": "notifications",
-    "description": "Módulo de notificações WhatsApp usando Botconect",
-    "logo": "https://botconect.site/public/uploads/25/02/1739733331A1Mvf6aszk2jY99QBiCP.png",
+    "description": "Módulo de notificações WhatsApp usando Central Whats",
+    "logo": "https://centralwhats.pro/assets/logo.png",
     "support": {
-        "homepage": "https://botconect.site",
-        "email": "contato@botconect.site",
-        "docs_url": "https://botconect.site/docs",
-        "support_url": "https://botconect.site/suporte"
+        "homepage": "https://centralwhats.pro",
+        "email": "contato@centralwhats.pro",
+        "docs_url": "https://centralwhats.pro/docs",
+        "support_url": "https://centralwhats.pro/suporte"
     },
     "authors": [
         {
-            "name": "Bot Conect",
-            "email": "contato@botconect.site"
+            "name": "Central Whats",
+            "email": "contato@centralwhats.pro"
         }
     ],
     "version": "10.0.0",
@@ -34,6 +34,6 @@
         "whatsapp",
         "notifications",
         "messaging",
-        "botconect"
+        "centralwhats"
     ]
 }

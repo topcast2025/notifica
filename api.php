@@ -6,11 +6,11 @@ if (!defined("WHMCS")) {
 
 require_once __DIR__ . '/logs.php';
 
-function whatsapp_test_connection($appkey, $authkey) {
+function whatsapp_test_connection($token) {
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://botconect.site/api/create-message',
+        CURLOPT_URL => 'https://centralwhats.pro/api/bb24c7c6-ed6f-463c-9636-3fdff96f6bf1/contact/send-message',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -18,11 +18,14 @@ function whatsapp_test_connection($appkey, $authkey) {
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => array(
-            'appkey' => $appkey,
-            'authkey' => $authkey,
-            'sandbox' => 'false'
-        ),
+        CURLOPT_POSTFIELDS => json_encode([
+            'number' => '5511999999999',
+            'message' => 'Teste de conexão - Central Whats'
+        ]),
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $token
+        ],
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_SSL_VERIFYHOST => false
     ));
@@ -68,40 +71,22 @@ function whatsapp_send_message($to, $message, $attachment = null) {
             return ['success' => false, 'message' => 'Módulo está temporariamente desativado.'];
         }
         
-        if (empty($moduleParams['appkey']) || empty($moduleParams['authkey'])) {
-            logActivity("Chaves da API não configuradas");
-            return ['success' => false, 'message' => 'Chaves da API não configuradas.'];
+        if (empty($moduleParams['token'])) {
+            logActivity("Token da API não configurado");
+            return ['success' => false, 'message' => 'Token da API não configurado.'];
         }
         
         $curl = curl_init();
         
-        $postFields = array(
-            'appkey' => $moduleParams['appkey'],
-            'authkey' => $moduleParams['authkey'],
-            'to' => preg_replace('/[^0-9]/', '', $to),
-            'message' => $message,
-            'sandbox' => 'false'
-        );
+        $postData = [
+            'number' => preg_replace('/[^0-9]/', '', $to),
+            'message' => $message
+        ];
         
-        logActivity("Dados do envio: " . print_r($postFields, true));
+        logActivity("Dados do envio: " . print_r($postData, true));
         
-        if ($attachment) {
-            if (filter_var($attachment, FILTER_VALIDATE_URL)) {
-                $postFields['file'] = $attachment;
-                logActivity("Anexo URL: " . $attachment);
-            } else {
-                if (file_exists($attachment)) {
-                    $postFields['file'] = new CURLFile($attachment);
-                    logActivity("Anexo arquivo local: " . $attachment);
-                } else {
-                    logActivity("Erro ao enviar mensagem WhatsApp: Arquivo não encontrado - " . $attachment);
-                    return ['success' => false, 'message' => 'Arquivo não encontrado'];
-                }
-            }
-        }
-
         $curlOptions = array(
-            CURLOPT_URL => 'https://botconect.site/api/create-message',
+            CURLOPT_URL => 'https://centralwhats.pro/api/bb24c7c6-ed6f-463c-9636-3fdff96f6bf1/contact/send-message',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -109,14 +94,40 @@ function whatsapp_send_message($to, $message, $attachment = null) {
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $postFields,
+            CURLOPT_POSTFIELDS => json_encode($postData),
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $moduleParams['token']
+            ],
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_VERBOSE => true
         );
 
-        if ($attachment && !filter_var($attachment, FILTER_VALIDATE_URL)) {
-            $curlOptions[CURLOPT_HTTPHEADER] = array('Content-Type: multipart/form-data');
+        // Se houver anexo, usar endpoint específico para mídia
+        if ($attachment) {
+            if (filter_var($attachment, FILTER_VALIDATE_URL)) {
+                $postData['media_url'] = $attachment;
+                $curlOptions[CURLOPT_POSTFIELDS] = json_encode($postData);
+                logActivity("Anexo URL: " . $attachment);
+            } else {
+                if (file_exists($attachment)) {
+                    // Para arquivos locais, usar multipart/form-data
+                    $curlOptions[CURLOPT_URL] = 'https://centralwhats.pro/api/bb24c7c6-ed6f-463c-9636-3fdff96f6bf1/contact/send-media';
+                    $curlOptions[CURLOPT_POSTFIELDS] = [
+                        'number' => preg_replace('/[^0-9]/', '', $to),
+                        'message' => $message,
+                        'media' => new CURLFile($attachment)
+                    ];
+                    $curlOptions[CURLOPT_HTTPHEADER] = [
+                        'Authorization: Bearer ' . $moduleParams['token']
+                    ];
+                    logActivity("Anexo arquivo local: " . $attachment);
+                } else {
+                    logActivity("Erro ao enviar mensagem WhatsApp: Arquivo não encontrado - " . $attachment);
+                    return ['success' => false, 'message' => 'Arquivo não encontrado'];
+                }
+            }
         }
 
         curl_setopt_array($curl, $curlOptions);
