@@ -1,0 +1,155 @@
+/* Additional styles for enhanced components */
+
+.feature-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(37, 211, 102, 0.1), transparent);
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
+    opacity: 0;
+}
+
+.feature-card:hover::after {
+    animation: shimmer 0.6s ease-in-out;
+    opacity: 1;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+/* Enhanced button styles */
+.btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+/* Improved mockup styles */
+.hero-mockup {
+    filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.15));
+}
+
+.mockup-screen {
+    background: linear-gradient(145deg, #ffffff, #f8fafc);
+}
+
+/* Enhanced chat animation */
+.chat-message {
+    opacity: 0;
+    transform: translateX(100%);
+    animation-fill-mode: forwards;
+}
+
+.chat-message.received {
+    transform: translateX(-100%);
+}
+
+/* Improved step connector */
+.step::after {
+    background: linear-gradient(90deg, var(--primary-color) 0%, rgba(37, 211, 102, 0.3) 50%, transparent 100%);
+}
+
+/* Enhanced template preview */
+.template-preview {
+    background: linear-gradient(145deg, #f8fafc, #e2e8f0);
+}
+
+.phone-mockup {
+    background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+    box-shadow: 
+        0 0 0 2px #333,
+        0 0 0 4px #555,
+        0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+/* Loading animation */
+body {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: var(--gradient-primary);
+    z-index: 9999;
+    transition: width 0.1s ease;
+}
+
+/* Enhanced stats animation */
+.stat-item {
+    position: relative;
+}
+
+.stat-item::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.6s ease;
+}
+
+.stat-item:hover::before {
+    width: 100px;
+    height: 100px;
+}
+
+/* Improved mobile responsiveness */
+@media (max-width: 480px) {
+    .hero-text h1 {
+        font-size: 2rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .cta-title {
+        font-size: 2rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
+    }
+}
