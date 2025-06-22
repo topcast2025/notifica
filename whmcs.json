@@ -1,0 +1,39 @@
+{
+    "schema": "10.0",
+    "type": "whmcs-addons",
+    "name": "whatsapp_notification",
+    "license": "proprietary",
+    "category": "notifications",
+    "description": "Módulo de notificações WhatsApp usando Botconect",
+    "logo": "https://botconect.site/public/uploads/25/02/1739733331A1Mvf6aszk2jY99QBiCP.png",
+    "support": {
+        "homepage": "https://botconect.site",
+        "email": "contato@botconect.site",
+        "docs_url": "https://botconect.site/docs",
+        "support_url": "https://botconect.site/suporte"
+    },
+    "authors": [
+        {
+            "name": "Bot Conect",
+            "email": "contato@botconect.site"
+        }
+    ],
+    "version": "10.0.0",
+    "minimum_whmcs_version": "8.0",
+    "requires": {
+        "php": ">=7.4.0"
+    },
+    "features": [
+        "Notificações via WhatsApp",
+        "Templates personalizáveis",
+        "Envio de PDFs",
+        "Logs de mensagens",
+        "Painel administrativo"
+    ],
+    "keywords": [
+        "whatsapp",
+        "notifications",
+        "messaging",
+        "botconect"
+    ]
+}
